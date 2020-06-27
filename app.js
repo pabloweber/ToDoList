@@ -13,7 +13,7 @@ app.use(cors());
 
 // Middleware routes
 const listItemsRoute = require('./routes/items');
-app.use('/items', listItemsRoute);
+app.use('/', listItemsRoute);
 
 // Connect to DB
 mongoose.connect(

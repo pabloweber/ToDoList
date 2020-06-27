@@ -24,7 +24,69 @@ router.post('/', async (req, res) => {
 		// Send to screen
 		res.json(savedItem);
 	} catch (error) {
-		res.json({ message: error })
+		res.json({ message: error });
+	}
+})
+
+// Set item as done
+router.patch('/:itemId/done', async (req, res) => {
+	try {
+		const updatedPost = await ListItem.updateOne(
+			{ _id: req.params.itemId },
+			{
+				$set: {
+					finished: true
+				}
+			}
+		);
+
+		// Send to screen
+		res.json(updatedPost);
+	} catch (error) {
+		res.json({ message: error });
+	}
+})
+
+// Set item as not done
+router.patch('/:itemId/notdone', async (req, res) => {
+	try {
+		const updatedPost = await ListItem.updateOne(
+			{ _id: req.params.itemId },
+			{
+				$set: {
+					finished: false
+				}
+			}
+		);
+
+		// Send to screen
+		res.json(updatedPost);
+	} catch (error) {
+		res.json({ message: error });
+	}
+})
+
+// Delete to do item 
+router.delete('/:itemId', async (req, res) => {
+	try {
+		const removedItem = await ListItem.deleteOne({ _id: req.params.itemId });
+
+		// Send to screen
+		res.json(removedItem);
+	} catch (error) {
+		res.json({ message: error });
+	}
+})
+
+// Delete all items
+router.delete('/deleteAll', async (req, res) => {
+	try {
+		await ListItem.deleteMany({}, callback);
+
+		// Send to screen
+		res.send("Deleted all items.");
+	} catch (error) {
+		res.json({ errorMessage: error });
 	}
 })
 
