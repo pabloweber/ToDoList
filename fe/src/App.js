@@ -1,26 +1,42 @@
 import React from 'react';
-import logo from './logo.svg';
-import './App.css';
+import { Container, List, Card, FormHelperText } from '@material-ui/core';
+import { MyList } from './List.js'
+import { makeStyles } from '@material-ui/core/styles'
+
+const useStyles = makeStyles({
+	app: {
+		backgroundColor: "#212121",
+		color: "white",
+		height: "100%"
+	},
+	container: {
+		backgroundColor: "#212121",
+		color: "white",
+		height: "100%",
+		display: "flex",
+		alignItems: "center",
+		justifyContent: "center",
+		
+	},
+	card: {
+		backgroundColor: "#424242",
+	},
+})
 
 function App() {
-  return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
-  );
+	const classes = useStyles();
+
+	return (
+		<div className={classes.app}>
+			<Container className={classes.container} maxWidth="sm">
+				<Card className={classes.card}>
+					<Container maxWidth="sm">
+						<MyList />
+					</Container>
+				</Card>
+			</Container>
+		</div>
+	);
 }
 
 export default App;
