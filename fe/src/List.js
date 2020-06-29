@@ -1,6 +1,7 @@
 import React from 'react'
-import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Checkbox, IconButton } from '@material-ui/core';
+import { List, ListItem, ListItemIcon, ListItemText, ListItemSecondaryAction, Checkbox, IconButton, TextField } from '@material-ui/core';
 import CloseIcon from '@material-ui/icons/Close';
+import AddIcon from '@material-ui/icons/Add';
 import { makeStyles } from '@material-ui/core/styles'
 
 const useStyles = makeStyles({
@@ -15,10 +16,13 @@ export class MyList extends React.Component {
 
 		this.state = {
 			checked: [],
-			items: []
+			items: [],
+			newItem: "",
 		} 
 
 		this.handleDelete = this.handleDelete.bind(this);
+		this.handleAddInput = this.handleAddInput.bind(this);
+		this.handleAdd = this.handleAdd.bind(this);
 		// this.deleteItem = this.handleDelete.bind(this);
 	}
 
@@ -75,6 +79,28 @@ export class MyList extends React.Component {
 		})
 	}
 
+	async handleAdd(){
+		const res = await fetch(`http://localhost:9000`, {
+			method: 'POST',
+			body: JSON.stringify({
+				description: this.state.newItem
+			}),
+			headers: {"Content-Type": "application/json"}
+		})
+
+		const item = await res.json();
+
+		this.setState({
+			items: [...this.state.items, item]
+		})
+	}
+
+	handleAddInput(e){
+		this.setState({
+			newItem: e.target.value
+		})
+	}
+
 	async markAsFinished(id){
 		await fetch(`http://localhost:9000/${id}/done`, {
 			method: 'PATCH'
@@ -92,7 +118,7 @@ export class MyList extends React.Component {
 		return (
 			<List>
 				{
-					notEmpty ? this.state.items.map((value, index) => {
+					this.state.items.map((value, index) => {
 						const text = this.state.items[index].description;
 						const id = this.state.items[index]._id;
 
@@ -117,8 +143,19 @@ export class MyList extends React.Component {
 								</ListItemSecondaryAction>
 							</ListItem>
 						)
-					}) : <div style={{color: "white"}}>Your list is empty bruh</div>
+					})
 				}
+
+				{/* 'Add' functionality */}
+				<ListItem key={this.state.items.length + 1} role={undefined} dense button>
+					<ListItemIcon>
+						<IconButton style={{color: "gray"}} edge="end" aria-label="comments" onClick={this.handleAdd}>
+							<AddIcon />
+						</IconButton>
+					</ListItemIcon>
+
+					<TextField id="outlined-basic" label="Enter a new item" variant="outlined" style={{border: ".5px solid gray", borderRadius: "5px", color: "white"}} onChange={this.handleAddInput}/>
+				</ListItem>
 			</List>
 		)
 	}
